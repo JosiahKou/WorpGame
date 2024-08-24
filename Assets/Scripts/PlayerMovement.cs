@@ -13,9 +13,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius;
     [SerializeField] public float jumpCooldown;
+    [SerializeField] public Animator walkingAnimation;
     private bool isFacingRight;
     private bool isGrounded;
     private bool readyToJump;
+    private float currentSpeed;
 
     private void Start()
     {
@@ -28,6 +30,23 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         MyInput();
+
+        if (rigidPlayer.velocity.x != 0)
+        {
+            walkingAnimation.SetBool("isWalking", true);
+        }
+        else
+        {
+            walkingAnimation.SetBool("isWalking", false);
+        }
+        if (rigidPlayer.velocity.y != 0)
+        {
+            walkingAnimation.SetBool("isJumping", true);
+        }
+        else
+        {
+            walkingAnimation.SetBool("isJumping", false);
+        }
     }
 
     // To visualize the ground check in the editor
@@ -41,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float horizontalInput = 0f;
         float currentSpeed = moveSpeed;
+
 
         // Handle left movement
         if (Input.GetKey(KeyCode.A))
